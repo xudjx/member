@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<!-- saved from url=(0040)http://demo.haoji.me/2017/02/08-js-xlsx/ -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+	<title>上海文献联编信息查询</title>
+	<meta name="description" content="上海文献联编信息查询">
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
+	<script src="https://cdn.staticfile.org/jquery/2.1./jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style type="text/css">
+	
+
+	table {
+	    border-collapse: collapse;
+	}
+	th, td {
+	    border: solid 1px green;
+	    padding: 5px 10px;
+		font-size: x-large;
+	
+	}
+
+	button{
+margin-top: 30px;
+  float: right;
+  width:150px;
+}
+input{
+	flex-grow: 1;
+}
+	.mt-sm {margin-top: 8px;}
+	body {
+		background: #f8f7f7;
+		padding: 0;
+		margin: 0;
+	}
+	.container {
+		
+		width: 1024px;
+		margin: 20 auto;
+		margin-top: 50px;
+		background: rgba(214, 234, 243, 0.765);
+		padding : 50px;
+		min-height: 60vh;
+		border:2px solid rgb(165, 178, 224);
+box-shadow: darkgrey 10px 10px 30px 5px ;
+	}
+
+    </style>
+</head>
+<body>
+	<div class="container">
+	<!-- <a style="font-size: x-large;text-decoration:underline" href="https://z.library.sh.cn/dbs:result">返回主站链接</a> -->
+	<p style="font-size: xx-large;margin-top: 50px; text-align:center;" >上海市文献联合编目中心用户协议书有效期查询系统</p>
+	<hr style="background-color: #90a5f7;height: 1px;"/>
+	<p style="font-size: xx-large">  </p>
+		<form class="form-horizontal" role="form">
+		<div class="form-group">
+			<label style="font-size: x-large;margin-top: 30px;" for="firstname" class="col-sm-3 control-label">机构全称：</label>
+			<div class="col-sm-8">
+				<input style="font-size: x-large;height: max-content;margin-top: 30px;" type="text" class="form-control" id="objkey" 
+					   placeholder="请输入机构全称">
+			</div>
+			
+		</div>
+			
+		<div class="form-group">
+			<label style="font-size: x-large;margin-top: 30px;" for="firstname" class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+					<a style="font-size: large;color: #777b8c;margin-top: 30px;text-decoration: none;">*请输入机构全称，仅限非公益性机构用户。</a>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-8">
+				<button style="font-size: x-large" type="button" class="btn btn-default" onclick="onSearch()">查询</button>
+			
+			</div>
+		</div>
+	</form>
+	<hr style="background-color: #90a5f7;height: 1px;"/>
+
+		<!-- <p style="font-size: large;margin-top: 50px;" id="textname"></p> -->
+		<label style="font-size: large;margin: auto;" for="firstname" id="textname"></label>
+		
+
+		
+		
+		<div id="result" contenteditable=""><table class="table" id="store">
+		</table></div>
+
+	</div>
+	<script type="text/javascript" src="./js/jquery.min.js"></script>
+	<script type="text/javascript" src="./js/xlsx.core.min.js"></script>
+	<script type="text/javascript">
+   
+   
+
+
+	//针对某列内容进行即时搜索筛选功能
+	function onSearch(){//js函数开始
+	$('#textname').html('');
+    // setTimeout(function(){//因为是即时查询，需要用setTimeout进行延迟，让值写入到input内，再读取
+		
+	var jgname=document.getElementById('objkey').value;   //获取输入框的值
+	//var select=document.getElementById('objselect').value;//获取下拉框的值
+    var storeId = $('#result table')[0];//获取table的id标识
+    var rowsLength = storeId.rows.length;//表格总共有多少行
+    var searchCol =0;//输入框要搜索的哪一列，这里是第一列，从0开始数起
+	var searchCol2 =1;//下拉框要搜索的哪一列，这里是第一列，从0开始数起
+    var jisuan=0;
+    for(var i=1;i<rowsLength;i++){//按表的行数进行循环，本例第一行是标题，所以i=1，从第二行开始筛选（从0数起）
+      var searchText = storeId.rows[i].cells[searchCol].innerHTML;//取得table行，列的值
+	  var searchText2 = storeId.rows[i].cells[searchCol2].innerHTML;//取得table行，列的值
+      if(String(searchText)==String(jgname)&&jgname!=null){
+		jisuan ++;//用match函数进行筛选，如果input的值，即变量 key的值为空，返回的是ture，
+		$('#textname').html(searchText+'协议书有效期至：'+searchText2);
+      }
+	  
+    }
+	if(jisuan==0){
+		$('#textname').html('未查询到用户信息，如有疑问请联系上海市文献联合编目中心工作人员（021-64451405）。');
+	}
+	
+
+//   },200);//200为延时时间
+}
+
+	// 读取本地excel文件
+	// function readWorkbookFromLocalFile(file, callback) {
+	// 	var reader = new FileReader();
+	// 	reader.onload = function(e) {
+	// 		var data = e.target.result;
+	// 		var workbook = XLSX.read(data, {type: 'binary'});
+	// 		if(callback) callback(workbook);
+	// 	};
+	// 	reader.readAsBinaryString(file);
+	// }
+
+	// 从网络上读取某个excel文件，url必须同域，否则报错
+	function readWorkbookFromRemoteFile(url, callback) {
+		var xhr = new XMLHttpRequest();
+		xhr.open('get', url, true);
+		xhr.responseType = 'arraybuffer';
+		xhr.onload = function(e) {
+			if(xhr.status == 200) {
+				var data = new Uint8Array(xhr.response)
+				var workbook = XLSX.read(data, {type: 'array'});
+				if(callback) callback(workbook);
+			}
+		};
+		xhr.send();
+	}
+
+	// 读取 excel文件
+	function outputWorkbook(workbook) {
+		var sheetNames = workbook.SheetNames; // 工作表名称集合
+		sheetNames.forEach(name => {
+			var worksheet = workbook.Sheets[name]; // 只能通过工作表名称来获取指定工作表
+			for(var key in worksheet) {
+				// v是读取单元格的原始值
+				console.log(key, key[0] === '!' ? worksheet[key] : worksheet[key].v);
+			}
+		});
+	}
+
+	function readWorkbook(workbook) {
+		var sheetNames = workbook.SheetNames; // 工作表名称集合
+		var worksheet = workbook.Sheets[sheetNames[0]]; // 这里我们只读取第一张sheet
+
+		var csv = XLSX.utils.sheet_to_html(worksheet);
+
+		document.getElementById('result').innerHTML = csv;
+		var storeId = $('#result table')[0];//获取table的id标识
+		var trs=storeId.rows;
+		for(var i=0,len=trs.length;i<len;i++){//按表的行数进行循环，本例第一行是标题，所以i=1，从第二行开始筛选（从0数起）
+        var cell=trs[i].cells[0].style.display='none';
+		var cell=trs[i].cells[1].style.display='none';
+    }
+	
+
+	}
+
+	// 将csv转换成表格
+	function csv2table(csv)
+	{
+		var html = '<table>';
+		var rows = csv.split('\n');
+		rows.pop(); // 最后一行没用的
+		rows.forEach(function(row, idx) {
+			var columns = row.split(',');
+			columns.unshift(idx+1); // 添加行索引
+			if(idx == 0) { // 添加列索引
+				html += '<tr>';
+				for(var i=0; i<columns.length; i++) {
+					html += '<th>' + (i==0?'':String.fromCharCode(65+i-1)) + '</th>';
+				}
+				html += '</tr>';
+			}
+			html += '<tr>';
+			columns.forEach(function(column) {
+				html += '<td>'+column+'</td>';
+			});
+			html += '</tr>';
+		});
+		html += '</table>';
+		
+
+		return html;
+	}
+
+	function table2csv(table) {
+		var csv = [];
+		$(table).find('tr').each(function() {
+			var temp = [];	
+			$(this).find('td').each(function() {
+				temp.push($(this).html());
+			})
+			temp.shift(); // 移除第一个
+			csv.push(temp.join(','));
+		});
+		csv.shift();
+		return csv.join('\n');
+	}
+
+	// csv转sheet对象
+	function csv2sheet(csv) {
+		var sheet = {}; // 将要生成的sheet
+		csv = csv.split('\n');
+		csv.forEach(function(row, i) {
+			row = row.split(',');
+			if(i == 0) sheet['!ref'] = 'A1:'+String.fromCharCode(65+row.length-1)+(csv.length-1);
+			row.forEach(function(col, j) {
+				sheet[String.fromCharCode(65+j)+(i+1)] = {v: col};
+			});
+		});
+		return sheet;
+	}
+
+	// 将一个sheet转成最终的excel文件的blob对象，然后利用URL.createObjectURL下载
+	function sheet2blob(sheet, sheetName) {
+		sheetName = sheetName || 'sheet1';
+		var workbook = {
+			SheetNames: [sheetName],
+			Sheets: {}
+		};
+		workbook.Sheets[sheetName] = sheet;
+		// 生成excel的配置项
+		var wopts = {
+			bookType: 'xlsx', // 要生成的文件类型
+			bookSST: false, // 是否生成Shared String Table，官方解释是，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
+			type: 'binary'
+		};
+		var wbout = XLSX.write(workbook, wopts);
+		var blob = new Blob([s2ab(wbout)], {type:"application/octet-stream"});
+		// 字符串转ArrayBuffer
+		function s2ab(s) {
+			var buf = new ArrayBuffer(s.length);
+			var view = new Uint8Array(buf);
+			for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+			return buf;
+		}
+		return blob;
+	}
+
+	/**
+	 * 通用的打开下载对话框方法，没有测试过具体兼容性
+	 * @param url 下载地址，也可以是一个blob对象，必选
+	 * @param saveName 保存文件名，可选
+	 */
+	function openDownloadDialog(url, saveName)
+	{
+		if(typeof url == 'object' && url instanceof Blob)
+		{
+			url = URL.createObjectURL(url); // 创建blob地址
+		}
+		var aLink = document.createElement('a');
+		aLink.href = url;
+		aLink.download = saveName || ''; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
+		var event;
+		if(window.MouseEvent) event = new MouseEvent('click');
+		else
+		{
+			event = document.createEvent('MouseEvents');
+			event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+		}
+		aLink.dispatchEvent(event);
+	}
+
+	$(document).ready(function(){  
+		loadRemoteFile('./ceshi.xlsx');	
+ })  
+	
+
+	
+	function loadRemoteFile(url) {
+		readWorkbookFromRemoteFile(url, function(workbook) {
+			readWorkbook(workbook);
+		});
+	}
+
+	function exportExcel() {
+		var csv = table2csv($('#result table')[0]);
+		var sheet = csv2sheet(csv);
+		var blob = sheet2blob(sheet);
+		openDownloadDialog(blob, '导出.xlsx');
+	}
+
+	// function exportSpecialExcel() {
+	// 	var aoa = [
+	// 		['主要信息', null, null, '其它信息'], // 特别注意合并的地方后面预留2个null
+	// 		['姓名', '性别', '年龄', '注册时间'],
+	// 		['张三', '男', 18, new Date()],
+	// 		['李四', '女', 22, new Date()]
+	// 	];
+	// 	var sheet = XLSX.utils.aoa_to_sheet(aoa);
+	// 	sheet['!merges'] = [
+	// 		// 设置A1-C1的单元格合并
+	// 		{s: {r: 0, c: 0}, e: {r: 0, c: 2}}
+	// 	];
+	// 	openDownloadDialog(sheet2blob(sheet), '单元格合并示例.xlsx');
+	// }
+	</script>
+
+</body></html>
